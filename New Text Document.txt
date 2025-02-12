@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { max-width: 400px; margin: 20px auto; }
+        input { width: 50px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Performance Tracker</h2>
+    <canvas id="radarChart"></canvas>
+    <div>
+        <label>Body: <input type="number" id="body" min="0" max="10"></label>
+        <label>Mind: <input type="number" id="mind" min="0" max="10"></label>
+        <label>Love: <input type="number" id="love" min="0" max="10"></label>
+        <label>Money: <input type="number" id="money" min="0" max="10"></label>
+        <label>Play: <input type="number" id="play" min="0" max="10"></label>
+    </div>
+    <button onclick="updateChart()">Update</button>
+    <script>
+        let ctx = document.getElementById('radarChart').getContext('2d');
+        let savedData = JSON.parse(localStorage.getItem('performanceData')) || [5, 5, 5, 5, 5];
+
+        let chart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Body', 'Mind', 'Love', 'Money', 'Play'],
+                datasets: [{
+                    label: 'Performance',
+                    data: savedData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: { responsive: true, scale: { min: 0, max: 10 } }
+        });
+
+        function updateChart() {
+            let newData = [
+                document.getElementById('body').value || 0,
+                document.getElementById('mind').value || 0,
+                document.getElementById('love').value || 0,
+                document.getElementById('money').value || 0,
+                document.getElementById('play').value || 0
+            ];
+            chart.data.datasets[0].data = newData;
+            chart.update();
+            localStorage.setItem('performanceData', JSON.stringify(newData));
+        }
+    </script>
+</body>
+</html>
